@@ -168,7 +168,8 @@ public class GuestBookRestControllerTest {
         mockMvc.perform(MockMvcRequestBuilders
                 .multipart("/guestbook/guest/add")
                 .file(file)
-                .param("textEntry", "Test Entry"))
+                //.param("textEntry", "Test Entry")
+                )
         		.andExpect(status().isOk());
         
     }
@@ -176,13 +177,15 @@ public class GuestBookRestControllerTest {
     @Test
     @WithUserDetails(value="admin")
     public void updateEntry_success() throws Exception {
-    	GuestBookEntry guestBookEntryUpdate = new GuestBookEntry(2, "username2", "Update Test Entry2", null, new Timestamp(System.currentTimeMillis()),new Timestamp(System.currentTimeMillis()),"admin1");
-    	
+        
+        String content = "Update Entry";
+    	MockMultipartFile file = new MockMultipartFile("imageEntry", "testfile.txt", MediaType.IMAGE_JPEG_VALUE, content.getBytes());
+        
         mockMvc.perform(MockMvcRequestBuilders
-                .post("/guestbook/admin/update")
-                .contentType(MediaType.APPLICATION_JSON)
-        		.accept(MediaType.APPLICATION_JSON)
-        		.content(this.mapper.writeValueAsString(guestBookEntryUpdate)))
+                .multipart("/guestbook/guest/add")
+                .file(file)
+                //.param("textEntry", "Test Entry")
+                )
         		.andExpect(status().isOk());
         
     }
@@ -190,11 +193,11 @@ public class GuestBookRestControllerTest {
     @Test
     @WithUserDetails(value="admin")
     public void approveEntry_success() throws Exception {
-    	GuestBookEntry guestBookEntryUpdate = new GuestBookEntry(2, "username2", "Update Test Entry2", null, new Timestamp(System.currentTimeMillis()),new Timestamp(System.currentTimeMillis()),"admin1");
+    	GuestBookEntry guestBookEntryUpdate = new GuestBookEntry(2, "guest", "Update Test Entry2", null, new Timestamp(System.currentTimeMillis()),new Timestamp(System.currentTimeMillis()),"admin");
     	guestBookEntryUpdate.setStatus("Approved");
     	
         mockMvc.perform(MockMvcRequestBuilders
-                .post("/guestbook/admin/approveentry")
+                .post("/guestbook/admin/approveentry/2")
                 .contentType(MediaType.APPLICATION_JSON)
         		.accept(MediaType.APPLICATION_JSON)
         		.content(this.mapper.writeValueAsString(guestBookEntryUpdate)))
