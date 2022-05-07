@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Login Page</title>
+
+    <!-- Bootstrap core CSS -->
+    <link th:href="@{/bootstrap.min.css}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link th:href="@{/signin.css}" rel="stylesheet">
+    
+  </head>
+
+  <body>
+		<form class="form-signin" th:object="${login}" th:action="@{/authenticate}"
+			method="post">
+			<h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+			<label for="inputUserName" class="sr-only">User Name</label> 
+				<input
+				type="text" id="inputUserName" class="form-control"
+				placeholder="User Name" required autofocus th:field="*{username}"> 
+				<label
+				for="inputPassword" class="sr-only">Password</label> 
+				<input
+				type="password" id="inputPassword" class="form-control"
+				placeholder="Password" required th:field="*{password}">
+			<button class="btn btn-lg btn-primary btn-block" type="submit">Sign In</button>
+		</form>
+</body>
+</html>
