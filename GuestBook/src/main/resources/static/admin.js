@@ -93,10 +93,30 @@ function viewImage(id){
 		  headers: { 'Authorization':  token},
 		  contentType: "application/json",
 		  error: function(err) {
-		    alert(err.responseJSON.message)
+		    alert(err.responseJSON.message);
 		  },
-		  success: function(data) {
-			 
+		  success: function(data, textStatus, request) {
+			  
+			  if(data.length%2!=0){
+				  data = data.substring(0,data.length-1);
+			  }
+			  var binary_string = window.atob(data);
+	            var len = binary_string.length;
+	            var bytes = new Uint8Array(len);
+	            for (var i = 0; i < len; i++) {
+	                bytes[i] = binary_string.charCodeAt(i);
+	            }
+			  const filenameHeader = request.getResponseHeader('content-disposition').split(';')[1];
+		        const filename = filenameHeader.substring(filenameHeader.indexOf("=")+1);
+		        const blob = new Blob([bytes.buffer]);
+		        const url = URL.createObjectURL(blob); 
+		        const link = document.createElement('a');
+		        link.href = url;
+		        link.setAttribute('download', filename);
+		        document.body.append(link);
+		        link.click();
+		        document.body.removeChild(link);
+		        URL.revokeObjectURL(url);
 		  }
 		});
 }
@@ -165,14 +185,29 @@ function updateentry(event){
 }
 
 function validateFileUploaded(){
-	var fileName = document.getElementById("customFile").value;
-    var idxDot = fileName.lastIndexOf(".") + 1;
-    var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
-    if(!(extFile=="jpg" || extFile=="jpeg" || extFile=="png")){
-    	$('#customFile').val('');
-        alert("Only jpg/jpeg and png files are allowed!");
-    }   
+	var file = $('#customFile')[0].files[0];
+	if (file){
+		var fileName=file.name;
+		if(fileName.indexOf(".") >= 0){
+			var idxDot = fileName.lastIndexOf(".") + 1;
+		    var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
+		    if(!(extFile=="jpg" || extFile=="jpeg" || extFile=="png")){
+		    	$('#customFile').val('');
+		        alert("Only jpg/jpeg and png files are allowed!");
+		    }else{
+		    	if(file.size > 1048576 ){
+		    		$('#customFile').val('');
+			        alert("Please select an image of size less than 1MB");
+		    	}
+		    }
+		}else{
+			$('#customFile').val('');
+			alert("Only jpg/jpeg and png files are allowed!");
+		}
+	}
+    
 }
+
 
 $(document).ready(function() {
 	getallentries();

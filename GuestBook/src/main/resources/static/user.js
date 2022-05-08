@@ -34,13 +34,27 @@ function createentry(event) {
   }
 
 function validateFileUploaded(){
-	var fileName = document.getElementById("customFile").value;
-    var idxDot = fileName.lastIndexOf(".") + 1;
-    var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
-    if(!(extFile=="jpg" || extFile=="jpeg" || extFile=="png")){
-    	$('#customFile').val('');
-        alert("Only jpg/jpeg and png files are allowed!");
-    }   
+	var file = $('#customFile')[0].files[0];
+	if (file){
+		var fileName=file.name;
+		if(fileName.indexOf(".") >= 0){
+			var idxDot = fileName.lastIndexOf(".") + 1;
+		    var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
+		    if(!(extFile=="jpg" || extFile=="jpeg" || extFile=="png")){
+		    	$('#customFile').val('');
+		        alert("Only jpg/jpeg and png files are allowed!");
+		    }else{
+		    	if(file.size > 1048576 ){
+		    		$('#customFile').val('');
+			        alert("Please select an image of size less than 1MB");
+		    	}
+		    }
+		}else{
+			$('#customFile').val('');
+			alert("Only jpg/jpeg and png files are allowed!");
+		}
+	}
+    
 }
 
 function logout(){

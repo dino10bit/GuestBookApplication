@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.Base64Utils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -147,7 +148,6 @@ public class GuestBookRestController {
     
     @PostMapping("/admin/approveentry/{id}")
     public ResponseEntity<Object> approveEntry(@PathVariable Integer id) {
-    	System.out.println("from approveEntry"+id);
     	 try {
          	this.guestBookService.approveGuestBookEntry(id);
          	return new ResponseEntity<Object>("Entry Approved", HttpStatus.OK);
@@ -170,9 +170,9 @@ public class GuestBookRestController {
         	byte[] content = entry.getContent().getBytes(1L,(int)entry.getContent().length());
         	return ResponseEntity.ok()
                     .contentLength(content.length)
-                    .header(HttpHeaders.CONTENT_TYPE, MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE)
+                   // .header(HttpHeaders.CONTENT_TYPE, MediaType.IMAGE_JPEG_VALUE)
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + entry.getFileName())
-                    .body(content);
+                    .body(Base64Utils.encodeToString(content));
         }catch(NoResultException ex) {
         	ErrorMessage errorMessage = new ErrorMessage();
 			errorMessage.setMessage(ex.getMessage());

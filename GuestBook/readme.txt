@@ -1,3 +1,5 @@
+NOTE: Due to infra issues, the DB used was H2 rather than MYSQL.
+
 Option 1 : Eclipse
 -----------------------------------------------------
 1. Import the source code(zip) to the eclipse.
@@ -25,3 +27,4 @@ Option 2 : CMD(command prompt)
 7.Open http://localhost:8080/ in the browser to see the login page.
 8. Login as guest with username as guest and password as password. Proceed to create an entry.
 9. Login as admin with username as admin and password as password. Proceed to perform different actions.
+
